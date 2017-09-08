@@ -88,13 +88,48 @@ void printEdges(int nodeID, node *nodePointer){
 	}
 }
 
-/* fills distances array with shortest distance from start node */
-void dijkstra(int startNode, int nodeCount, node *nodes[], long distances[]){
+/* returns the next unvisited node, or -1 if all nodes are visited */
+int getNextUnvisitedNode(int visited[], long distances[], int nodeCount){
+	long minDistance = LONG_MAX;
+	int minDistanceNode = -1;
+
 	for (int i = 0; i < nodeCount; ++i)
 	{
-		distances[i] = LONG_MAX;
+		if(!visited[i] && distances[i] < minDistance){
+			minDistance = distances[i];
+			minDistanceNode = i;
+		}
 	}
+
+	return minDistanceNode;
+}
+
+/* fills distances array with shortest distance from start node */
+void dijkstra(int startNode, int nodeCount, node *nodes[], long distances[]){
+	/* array for unvisted/visited, array for distances */
+	int visited[nodeCount], currentNode;
+
+	/* Initialize all nodes but the startNode to be unvisited, and set their tentative distance to infinity */
+	for (int i = 0; i < nodeCount; ++i)
+	{
+		visited[i] = FALSE;
+		distances[i] = LONG_MAX-1;
+	}
+
 	distances[startNode] = 0;
+
+	while((currentNode = getNextUnvisitedNode(visited, distances, nodeCount)) > -1){
+		printf("The next unvisited node is %d\n", currentNode);
+
+		//calculate new weight for each adjacent node to current node
+		printf("Connected to:\n");
+		nodeEdge *current = nodes[currentNode]->head->next;
+		while(current != NULL){
+			printf("%d\n", current->to);
+			current = current->next;
+		}
+		visited[currentNode] = TRUE;
+	}
 }
 
 int main(int argc, char const *argv[])
@@ -147,7 +182,7 @@ int main(int argc, char const *argv[])
 	edge *currentEdge = head;
 	while(currentEdge->next != NULL){
 		currentEdge = currentEdge->next;
-		printf("Adding edge: from %d to %d\n", currentEdge->from, currentEdge->to);
+		//printf("Adding edge: from %d to %d\n", currentEdge->from, currentEdge->to);
 		addEdgeToNode(nodes[currentEdge->from], currentEdge->to, currentEdge->weight);
 	}
 	while(currentCheckpoint->next != NULL){
@@ -156,17 +191,19 @@ int main(int argc, char const *argv[])
 	}
 
 
-	for(int i=0; i<maxNode+1; i++){
+	/* for(int i=0; i<maxNode+1; i++){
 		printf("Node #%d\n", i);
 		printf(" is safehouse: %d\n", nodes[i]->isSafehouse);
 		printf("Points towards: ");
 
 		printEdges(i, nodes[i]);
 		printf("\n\n");
-	}
+	} */
 
 	long distances[maxNode+1];
-	dijkstra(3, maxNode + 1, nodes, distances);
+
+	dijkstra(2, maxNode + 1, nodes, distances);
+	
 	for(int i=0; i<maxNode+1; i++){
 		printf("%ld\n", distances[i]);
 	}
