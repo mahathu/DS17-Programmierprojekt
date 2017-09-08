@@ -1,0 +1,76 @@
+-Liste an Schutzhütten
+-ID Start, ID Ziel, maxWeight
+-Liste an Edges, from, to, weight
+
+typedef struct{
+	int from;
+	int to;
+	long weight;
+} edge;
+
+int startID, zielID;
+long maxWeight;
+int schutzhütten[];
+
+/* typedef struct{
+	linked list nodeEdge;
+	bool isSafeHouse;
+	bool isworkingsafehouse;
+} node; */
+
+typedef struct{
+	int to;
+	long weight;
+} nodeEdge;
+
+in func dijkstra:
+	priority queue:
+		element: node;
+		key: entfernung;
+	priority queue implementiert als min heap
+	min heap: 
+		array an node-Elementen
+
+
+long[] dijkstra(node start, minheap); //Potenziell terminieren wenn shortest part gefunden für gegebenen Knoten
+
+=========
+jeder malloc call -> free()
+=========
+
+Schritt 1: Daten einlesen
+
+- int startID, int zielID, long maxWeight bestimmen;
+- linked List "input" mit struct edge elementen, maxID bestimmen;
+- node knoten[maxID] daraus erstellen (jedes Element enthält struct node)
+- array mit schutzhütten
+
+Schritt 2: verarbeiten:
+
+- über input iterieren, knoten[] befüllen
+- min heap erstellen, dafür über knoten[] iterieren und Elemente nacheinander hinzufügen
+
+Schritt 3: Dijkstra:
+
+- Funktion dijkstra(startID, minheap); -> Rückgabewert: long arr[]
+- Element für Element abgleichen ob arr[i] < maxWeight && knoten[i] is schutzhütte:
+	iff true: knoten[i]->isGuteSchutzhütte = 1
+- Funktion dijkstra für jedes Element aus knoten[] mit isGuteSchutzhütte = 1; -> Rückgabewert: long arr[]
+	if arr[zielID] > maxWeight -> knoten[j]->isGuteSchutzhütte = 0
+
+Schritt 4: Ausgabe:
+
+- iterieren über knoten[]
+- falls knoten[i]->isGuteSchutzhütte true/nonzero: i ausgeben
+
+
+
+
+
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO: 
+try to remove ->xx = NULL declarations
+comments
